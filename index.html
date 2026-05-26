@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keyboard Command Deck — Mac + VS Code shortcuts</title>
+<meta name="description" content="An interactive, searchable reference for navigating macOS, VS Code, and Chrome entirely by keyboard.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0d12;
+    --bg2:#11141b;
+    --surface:#161a23;
+    --surface2:#1c212c;
+    --line:#262c3a;
+    --line2:#323a4d;
+    --ink:#f3f5f9;
+    --muted:#8e98ac;
+    --faint:#5c6577;
+    --keytop:#2c3445;
+    --keybot:#171c27;
+    --keyline:#3a4256;
+    --accent:#5b8cff;
+
+    --vscode:#4ea1ff;
+    --text:#4cd07d;
+    --macos:#c07cf5;
+    --chrome:#ff6b5e;
+    --setup:#ffb340;
+    --github:#58a6ff;
+  }
+  html[data-theme="light"]{
+    --bg:#f4f6fa;
+    --bg2:#eef1f7;
+    --surface:#ffffff;
+    --surface2:#f7f9fc;
+    --line:#e2e7f0;
+    --line2:#d3dae6;
+    --ink:#0f1320;
+    --muted:#5a647b;
+    --faint:#8a93a6;
+    --keytop:#39414f;
+    --keybot:#1d222d;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Space Grotesk",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  /* atmospheric background */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(60% 50% at 15% 0%, rgba(91,140,255,.12), transparent 70%),
+      radial-gradient(50% 45% at 90% 10%, rgba(192,124,245,.10), transparent 70%),
+      radial-gradient(45% 40% at 70% 100%, rgba(76,208,125,.08), transparent 70%);
+  }
+  html[data-theme="light"] body::before{opacity:.5;}
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 24px;}
+
+  /* ---------- header ---------- */
+  header{padding:64px 0 26px;}
+  .eyebrow{
+    font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:3px;
+    text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:16px;
+  }
+  h1{
+    font-size:clamp(36px,6vw,68px);font-weight:700;letter-spacing:-2px;line-height:.98;
+  }
+  h1 .g{
+    background:linear-gradient(120deg,var(--vscode),var(--macos) 55%,var(--chrome));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .lede{
+    margin-top:18px;font-size:clamp(15px,2vw,18px);color:var(--muted);max-width:620px;
+  }
+
+  /* ---------- toolbar ---------- */
+  .toolbar{
+    position:sticky;top:0;z-index:30;
+    margin-top:34px;padding:14px 0;
+    background:color-mix(in srgb, var(--bg) 80%, transparent);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .toolbar .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .search{
+    flex:1;min-width:220px;position:relative;display:flex;align-items:center;
+  }
+  .search svg{position:absolute;left:14px;width:18px;height:18px;stroke:var(--faint);}
+  .search input{
+    width:100%;padding:13px 16px 13px 42px;border-radius:12px;
+    background:var(--surface);border:1px solid var(--line);
+    color:var(--ink);font-family:inherit;font-size:15px;outline:none;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  .search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent);}
+  .search kbd{
+    position:absolute;right:12px;font-family:"JetBrains Mono",monospace;font-size:11px;
+    color:var(--faint);border:1px solid var(--line2);border-radius:6px;padding:3px 7px;
+  }
+  .iconbtn{
+    width:46px;height:46px;border-radius:12px;background:var(--surface);
+    border:1px solid var(--line);color:var(--ink);cursor:pointer;
+    display:grid;place-items:center;transition:.15s;flex:none;
+  }
+  .iconbtn:hover{border-color:var(--line2);background:var(--surface2);}
+  .iconbtn svg{width:20px;height:20px;}
+
+  /* ---------- chips ---------- */
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+  .chip{
+    font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:600;
+    padding:8px 14px;border-radius:999px;cursor:pointer;
+    background:var(--surface);border:1px solid var(--line);color:var(--muted);
+    transition:.15s;letter-spacing:.3px;display:flex;align-items:center;gap:7px;
+  }
+  .chip:hover{color:var(--ink);border-color:var(--line2);}
+  .chip i{width:9px;height:9px;border-radius:3px;display:inline-block;background:var(--faint);}
+  .chip[data-active="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+  .chip[data-active="true"] i{background:var(--bg);}
+
+  /* ---------- sections ---------- */
+  main{padding:30px 0 90px;}
+  .group{margin-top:46px;scroll-margin-top:150px;}
+  .ghead{display:flex;align-items:center;gap:13px;margin-bottom:18px;}
+  .ghead .bar{width:5px;height:30px;border-radius:3px;background:var(--c);}
+  .ghead h2{font-size:24px;font-weight:700;letter-spacing:-.6px;}
+  .ghead .meta{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--faint);
+    margin-left:auto;letter-spacing:.5px;text-transform:uppercase;}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:13px;}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    padding:17px 18px;display:flex;flex-direction:column;gap:11px;
+    transition:transform .14s,border-color .14s,box-shadow .14s;position:relative;
+    cursor:default;
+  }
+  .card:hover{transform:translateY(-3px);border-color:var(--c);
+    box-shadow:0 14px 30px -16px color-mix(in srgb,var(--c) 55%,transparent);}
+  .card .label{font-size:14.5px;font-weight:600;letter-spacing:-.1px;}
+  .card .note{font-size:12px;color:var(--muted);line-height:1.45;margin-top:-4px;}
+  .keys{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:4px;}
+
+  .key{
+    --kc:var(--c);
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:32px;height:36px;padding:0 10px;
+    background:linear-gradient(180deg,var(--keytop),var(--keybot));
+    border:1px solid var(--line2);
+    border-radius:9px;color:var(--ink);
+    font-family:"JetBrains Mono",monospace;font-size:14px;font-weight:600;
+    box-shadow:0 3px 0 rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.07);
+    white-space:nowrap;letter-spacing:.3px;
+  }
+  .key.wide{font-size:12px;letter-spacing:.4px;}
+  .plus{color:var(--faint);font-weight:700;font-size:13px;}
+  .orsep{color:var(--faint);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+
+  .copy{
+    position:absolute;top:13px;right:13px;width:28px;height:28px;border-radius:8px;
+    background:var(--surface2);border:1px solid var(--line);color:var(--muted);
+    display:grid;place-items:center;cursor:pointer;opacity:0;transition:.14s;
+  }
+  .card:hover .copy{opacity:1;}
+  .copy:hover{color:var(--ink);border-color:var(--c);}
+  .copy svg{width:14px;height:14px;}
+  .copy.done{color:var(--text);border-color:var(--text);}
+
+  /* callouts */
+  .callout{
+    margin-top:14px;border-radius:16px;padding:17px 19px;display:flex;gap:13px;
+    font-size:13.5px;line-height:1.5;
+    background:color-mix(in srgb,var(--c) 12%,var(--surface));
+    border:1px solid color-mix(in srgb,var(--c) 35%,var(--line));
+  }
+  .callout .ic{font-size:18px;flex:none;}
+  .callout b{color:var(--ink);}
+
+  /* compare + tools + screens reuse */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+  @media(max-width:640px){.compare{grid-template-columns:1fr;}}
+  .col{border-radius:16px;padding:19px 21px;border:1px solid var(--line);}
+  .col h3{font-size:15px;font-weight:700;margin-bottom:13px;}
+  .col.win{background:color-mix(in srgb,var(--text) 10%,var(--surface));border-color:color-mix(in srgb,var(--text) 30%,var(--line));}
+  .col.fail{background:color-mix(in srgb,var(--chrome) 10%,var(--surface));border-color:color-mix(in srgb,var(--chrome) 30%,var(--line));}
+  .col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+  .col li{font-size:13px;padding-left:24px;position:relative;color:var(--muted);}
+  .col.win li::before{content:"✓";position:absolute;left:0;color:var(--text);font-weight:700;}
+  .col.fail li::before{content:"✕";position:absolute;left:0;color:var(--chrome);font-weight:700;}
+
+  .screens{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+  @media(max-width:760px){.screens{grid-template-columns:1fr;}}
+  .screen{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface);}
+  .screen .bar{padding:9px 14px;font-family:"JetBrains Mono",monospace;font-size:11px;
+    font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#fff;
+    display:flex;justify-content:space-between;}
+  .screen .body{padding:16px;}
+  .screen .body .big{font-size:16px;font-weight:700;}
+  .screen .body .small{font-size:12px;color:var(--muted);margin-top:4px;}
+
+  .tool{display:flex;gap:14px;align-items:flex-start;background:var(--surface);
+    border:1px solid var(--line);border-radius:16px;padding:18px 20px;}
+  .tool .tag{font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:700;
+    letter-spacing:.5px;text-transform:uppercase;color:#fff;padding:6px 11px;border-radius:999px;
+    flex:none;margin-top:2px;}
+  .tool h4{font-size:15px;font-weight:700;margin-bottom:5px;}
+  .tool p{font-size:13px;color:var(--muted);line-height:1.5;}
+  .tool a{color:var(--macos);text-decoration:none;font-size:12px;font-family:"JetBrains Mono",monospace;
+    display:inline-block;margin-top:7px;font-weight:600;}
+  .tool a:hover{text-decoration:underline;}
+
+  .stack{display:flex;flex-direction:column;gap:12px;}
+  .desktops{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+  @media(max-width:760px){.desktops{grid-template-columns:1fr;}}
+  .ds{display:flex;gap:12px;align-items:center;border:1px dashed var(--line2);border-radius:14px;padding:15px;background:var(--surface);}
+  .ds .num{width:34px;height:34px;border-radius:10px;background:var(--c);color:#fff;font-weight:700;
+    display:grid;place-items:center;flex:none;font-family:"JetBrains Mono",monospace;}
+  .ds .t1{font-size:13.5px;font-weight:700;}
+  .ds .t2{font-size:11.5px;color:var(--muted);}
+
+  .empty{text-align:center;padding:70px 20px;color:var(--faint);display:none;}
+  .empty.show{display:block;}
+  .empty .big{font-size:20px;font-weight:700;color:var(--muted);margin-bottom:8px;}
+
+  footer{border-top:1px solid var(--line);padding:30px 0 60px;color:var(--faint);font-size:12.5px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  footer a{color:var(--accent);text-decoration:none;}
+
+  .hide{display:none !important;}
+  /* toast */
+  #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:12px;font-weight:600;
+    font-size:13.5px;opacity:0;pointer-events:none;transition:.25s;z-index:60;}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">macOS · VS Code · Chrome · GitHub</div>
+    <h1>Keyboard<br><span class="g">Command Deck</span></h1>
+    <p class="lede">Move through your machine without touching the mouse. Search any action, filter by app, and copy the shortcut. Built for a Mac with multiple monitors.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="row">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="q" type="text" placeholder="Search shortcuts — try “tab”, “select”, “desktop”…" autocomplete="off">
+        <kbd>/</kbd>
+      </label>
+      <button class="iconbtn" id="theme" title="Toggle theme" aria-label="Toggle theme">
+        <svg id="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+    <div class="chips" id="chips">
+      <button class="chip" data-filter="all" data-active="true"><i style="background:var(--ink)"></i>All</button>
+      <button class="chip" data-filter="macos"><i style="background:var(--macos)"></i>macOS Windows</button>
+      <button class="chip" data-filter="chrome"><i style="background:var(--chrome)"></i>Chrome</button>
+      <button class="chip" data-filter="vscode"><i style="background:var(--vscode)"></i>VS Code</button>
+      <button class="chip" data-filter="text"><i style="background:var(--text)"></i>Text</button>
+      <button class="chip" data-filter="github"><i style="background:var(--github)"></i>GitHub</button>
+      <button class="chip" data-filter="setup"><i style="background:var(--setup)"></i>Setup</button>
+    </div>
+  </div>
+
+  <main id="main"><!-- sections injected by JS --></main>
+
+  <div class="empty" id="empty">
+    <div class="big">No shortcuts match that.</div>
+    <div>Try a different word, or clear the search.</div>
+  </div>
+
+  <footer>
+    <span>Keyboard Command Deck · press <strong>/</strong> to search</span>
+    <span>Built as a static page — deploy anywhere.</span>
+  </footer>
+</div>
+
+<div id="toast">Copied to clipboard</div>
+
+<script>
+// ---------- DATA ----------
+const C = {macos:'var(--macos)', chrome:'var(--chrome)', vscode:'var(--vscode)', text:'var(--text)', github:'var(--github)', setup:'var(--setup)'};
+const SECTIONS = [
+  { cat:'macos', title:'Window & Desktop Control', meta:'never click the dock',
+    callout:{ic:'⚡',html:'<b>This is your real bottleneck.</b> With 3 displays the slow part isn’t typing — it’s context switching. Switch with keys, not the mouse.'},
+    cards:[
+      {label:'See all windows', note:'Mission Control — everything at once.', keys:['⌃','↑']},
+      {label:"Current app's windows", note:'Just this app, spread out.', keys:['⌃','↓']},
+      {label:'Cycle windows in app', note:'Critical with multiple Chrome windows.', keys:['⌘','`']},
+      {label:'Next app', note:'Switch apps — don’t click them.', keys:['⌘','Tab']},
+      {label:'Previous app', keys:['⌘','⇧','Tab']},
+      {label:'Move between desktops', note:'Faster than scanning 3 monitors.', keys:['⌃','←','/','→']},
+    ]},
+  { cat:'macos', title:'Spotlight, Finder & System', meta:'launch by typing',
+    cards:[
+      {label:'Spotlight', note:'Type “term”, “chrome”, “cursor” — no folder browsing.', keys:['⌘','Space']},
+      {label:'Screenshot a region', keys:['⌘','⇧','4']},
+      {label:'Screenshot toolbar', note:'Record, full screen, options.', keys:['⌘','⇧','5']},
+      {label:'Jump by word', keys:['⌥','←','/','→']},
+      {label:'Start / end of line', keys:['⌘','←','/','→']},
+      {label:'Delete by word', keys:['⌥','Delete']},
+    ]},
+  { cat:'chrome', title:'Chrome Navigation', meta:'a lifesaver past 20 tabs',
+    cards:[
+      {label:'Next / previous tab', keys:['⌘','⌥','→','/','←']},
+      {label:'Jump to tab number', note:'⌘ + 9 jumps to the last tab.', keys:['⌘','1','–','9']},
+      {label:'Search your tabs', note:'Find any open tab by name.', keys:['⌘','⇧','A']},
+      {label:'New tab', keys:['⌘','T']},
+      {label:'Close tab', keys:['⌘','W']},
+      {label:'Reopen closed tab', keys:['⌘','⇧','T']},
+    ]},
+  { cat:'vscode', title:'VS Code — Open & Search', meta:'stop browsing folders',
+    cards:[
+      {label:'Open file fast', note:'Type the filename, hit enter.', keys:['⌘','P']},
+      {label:'Search entire project', keys:['⌘','⇧','F']},
+      {label:'Command palette', note:'Themes, git, format, restart TS — everything.', keys:['⌘','⇧','P']},
+      {label:'Go to line', keys:['⌃','G']},
+      {label:'Go to symbol / function', keys:['⌘','⇧','O']},
+      {label:'Jump to definition', keys:['F12']},
+      {label:'Peek definition', note:'View it inline without leaving.', keys:['⌥','F12']},
+      {label:'Toggle sidebar', keys:['⌘','B']},
+      {label:'Toggle terminal', keys:['⌃','`']},
+    ]},
+  { cat:'vscode', title:'VS Code — Tabs & Multi-cursor', meta:'edit many spots at once',
+    callout:{ic:'🎯',html:'<b>Multi-cursor is the biggest win.</b> Add a cursor with ⌥ + Click, grab the next match with ⌘ + D, undo the last cursor with ⌘ + U. One edit, many places.'},
+    cards:[
+      {label:'Next tab', keys:['⌃','Tab']},
+      {label:'Previous tab', keys:['⌃','⇧','Tab']},
+      {label:'Reopen closed file', keys:['⌘','⇧','T']},
+      {label:'Select next matching word', note:'Tap repeatedly to edit every match.', keys:['⌘','D']},
+      {label:'Select all matching words', keys:['⌘','⇧','L']},
+      {label:'Undo last cursor', keys:['⌘','U']},
+    ]},
+  { cat:'text', title:'Selecting & Highlighting', meta:'stop dragging the mouse',
+    callout:{ic:'🖱️',html:'<b>Mouse for position, keyboard for selection.</b> Click near the text, hold ⌥ + ⇧, then fly across with the arrows. Beats dragging every time.'},
+    cards:[
+      {label:'Select one character', keys:['⇧','←','/','→']},
+      {label:'Select word by word', note:'Huge upgrade over dragging.', keys:['⌥','⇧','←','/','→']},
+      {label:'Select up / down a line', keys:['⇧','↑','/','↓']},
+      {label:'Select to start of line', keys:['⌘','⇧','←']},
+      {label:'Select to end of line', keys:['⌘','⇧','→']},
+      {label:'Select all', keys:['⌘','A']},
+      {label:'Copy', keys:['⌘','C']},
+      {label:'Cut', keys:['⌘','X']},
+      {label:'Paste', keys:['⌘','V']},
+      {label:'Undo', keys:['⌘','Z']},
+      {label:'Redo', keys:['⌘','⇧','Z']},
+      {label:'Expand selection smartly', note:'Grows to quotes, brackets, functions.', keys:['⇧','⌥','→','/','←']},
+    ]},
+  { cat:'github', title:'While you’re in the repo', meta:'status · sync · PRs',
+    callout:{ic:'⌨️',html:'<b>Terminal commands, not shortcuts.</b> Hover a card and copy the line. Requires <a href="https://cli.github.com/" target="_blank" rel="noopener" style="color:inherit">GitHub CLI</a> (<code style="font-family:JetBrains Mono,monospace">gh</code>) for PR commands.'},
+    cards:[
+      {label:'Working tree status', keys:['git status']},
+      {label:'Pull latest on current branch', keys:['git pull']},
+      {label:'Push current branch', keys:['git push']},
+      {label:'PR status for this branch', keys:['gh pr status']},
+      {label:'View current PR', keys:['gh pr view']},
+      {label:'Open current PR in browser', keys:['gh pr view --web']},
+      {label:'Check out a PR locally', note:'Replace 123 with the PR number.', keys:['gh pr checkout 123']},
+      {label:'Create PR from current branch', note:'Interactive prompts, or add --fill for title/body from commits.', keys:['gh pr create']},
+      {label:'Stage and commit', note:'Adjust the message; run from repo root.', keys:['git add -A && git commit -m "message"']},
+    ]},
+  { cat:'github', title:'Repo housekeeping', meta:'auth · CI · cleanup',
+    cards:[
+      {label:'Verify GitHub CLI login', keys:['gh auth status']},
+      {label:'Your open pull requests', keys:['gh pr list --author @me']},
+      {label:'All open pull requests', keys:['gh pr list']},
+      {label:'Recent workflow runs', keys:['gh run list --limit 10']},
+      {label:'Watch a run until it finishes', note:'Replace RUN_ID from gh run list.', keys:['gh run watch RUN_ID']},
+      {label:'List releases', keys:['gh release list']},
+      {label:'Prune stale remote refs', keys:['git fetch --prune']},
+      {label:'Delete merged local branches', note:'Keeps main/master; review the list before confirming.', keys:["git branch --merged | grep -vE '^\\*|main|master' | xargs git branch -d"]},
+    ]},
+];
+
+const main = document.getElementById('main');
+const ORSET = new Set(['/','–']);
+
+function keyHTML(k){
+  if(ORSET.has(k)) return `<span class="orsep">${k==='/'?'or':k}</span>`;
+  const wide = k.length>2 ? ' wide':'';
+  return `<span class="key${wide}">${k}</span>`;
+}
+function plain(keys){
+  const parts = keys.filter(k=>!ORSET.has(k));
+  if(parts.length===1) return parts[0];
+  return parts.join(' + ').replace(/\+ \//g,'/');
+}
+function keysRow(keys){
+  if(keys.length===1 && !ORSET.has(keys[0])) return keyHTML(keys[0]);
+  let out=[];
+  keys.forEach((k,i)=>{
+    out.push(keyHTML(k));
+    const next=keys[i+1];
+    if(next && !ORSET.has(k) && !ORSET.has(next)) out.push('<span class="plus">+</span>');
+  });
+  return out.join('');
+}
+
+// render keyboard sections
+SECTIONS.forEach((s,si)=>{
+  const sec=document.createElement('section');
+  sec.className='group'; sec.dataset.cat=s.cat; sec.style.setProperty('--c',C[s.cat]);
+  sec.id='sec-'+si;
+  let cards = s.cards.map(c=>`
+    <div class="card" data-search="${(c.label+' '+(c.note||'')+' '+c.keys.join(' ')).toLowerCase()}">
+      <button class="copy" title="Copy shortcut" data-copy="${plain(c.keys)}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+      </button>
+      <div class="label">${c.label}</div>
+      ${c.note?`<div class="note">${c.note}</div>`:''}
+      <div class="keys">${keysRow(c.keys)}</div>
+    </div>`).join('');
+  sec.innerHTML=`
+    <div class="ghead"><span class="bar"></span><h2>${s.title}</h2><span class="meta">${s.meta}</span></div>
+    <div class="cards">${cards}</div>
+    ${s.callout?`<div class="callout"><span class="ic">${s.callout.ic}</span><div>${s.callout.html}</div></div>`:''}`;
+  main.appendChild(sec);
+});
+
+// ---- static extra sections: spaces plan, monitor map, scales, tools ----
+const extra=document.createElement('section');
+extra.className='group'; extra.dataset.cat='setup'; extra.style.setProperty('--c',C.setup); extra.id='sec-setup';
+extra.innerHTML=`
+  <div class="ghead"><span class="bar"></span><h2>Your Spatial Setup</h2><span class="meta">one job per screen</span></div>
+  <div class="screens" style="margin-bottom:13px">
+    <div class="screen"><div class="bar" style="background:var(--vscode)"><span>Monitor 1</span><span>main</span></div><div class="body"><div class="big">VS Code</div><div class="small">Code lives here, full screen, always.</div></div></div>
+    <div class="screen"><div class="bar" style="background:var(--text)"><span>Monitor 2</span><span>reference</span></div><div class="body"><div class="big">Browser / Docs</div><div class="small">Reading, previewing, looking up.</div></div></div>
+    <div class="screen"><div class="bar" style="background:var(--setup)"><span>Mac Screen</span><span>comms</span></div><div class="body"><div class="big">Slack · Terminal</div><div class="small">Interruptions, off to the side.</div></div></div>
+  </div>
+  <div class="desktops" style="--c:var(--setup)">
+    <div class="ds"><div class="num">1</div><div><div class="t1">Coding</div><div class="t2">Heads-down building.</div></div></div>
+    <div class="ds"><div class="num">2</div><div><div class="t1">Browser / Research</div><div class="t2">Chrome, docs, reading.</div></div></div>
+    <div class="ds"><div class="num">3</div><div><div class="t1">Comms / Docs</div><div class="t2">Slack, mail, notes.</div></div></div>
+  </div>
+  <div class="callout"><span class="ic">🧠</span><div><b>The key is fixed spatial memory.</b> When every tool always lives in the same place, your hands go there automatically — no hunting, no alt-tab roulette.</div></div>`;
+main.appendChild(extra);
+
+const scales=document.createElement('section');
+scales.className='group'; scales.dataset.cat='setup'; scales.style.setProperty('--c',C.setup); scales.id='sec-scales';
+scales.innerHTML=`
+  <div class="ghead"><span class="bar"></span><h2>What Actually Scales</h2><span class="meta">the habits that win</span></div>
+  <div class="compare">
+    <div class="col win"><h3>✅ Do this</h3><ul>
+      <li>Keyboard for navigation, mouse for precision.</li>
+      <li>Fixed workspace layout — same app, same place.</li>
+      <li>Minimal desktop switching.</li>
+      <li>Know which desktop everything belongs to.</li></ul></div>
+    <div class="col fail"><h3>⛔ Why people fail</h3><ul>
+      <li>Random windows scattered everywhere.</li>
+      <li>One giant Chrome session with 50 tabs.</li>
+      <li>Navigating visually instead of spatially.</li>
+      <li>Hunting across 3 screens for a window.</li></ul></div>
+  </div>
+  <div class="ghead" style="margin-top:34px"><span class="bar"></span><h2>Tools That Change Everything</h2><span class="meta">install in this order</span></div>
+  <div class="stack">
+    <div class="tool"><span class="tag" style="background:var(--macos)">Start here</span><div><h4>Raycast</h4><p>Replaces Spotlight and becomes your app launcher, clipboard history, window manager, command runner, and AI launcher in one.</p><a href="https://www.raycast.com/" target="_blank" rel="noopener">raycast.com ↗</a></div></div>
+    <div class="tool"><span class="tag" style="background:var(--ink);color:var(--bg)">Next level</span><div><h4>Rectangle · Karabiner-Elements</h4><p>Keyboard-driven window tiling and placement, app hotkeys, and key remapping. Rectangle alone immediately improves a multi-monitor setup.</p><a href="https://rectangleapp.com/" target="_blank" rel="noopener">rectangleapp.com ↗</a> &nbsp; <a href="https://karabiner-elements.pqrs.org/" target="_blank" rel="noopener">karabiner-elements.pqrs.org ↗</a></div></div>
+  </div>`;
+main.appendChild(scales);
+
+// ---------- INTERACTIVITY ----------
+const q=document.getElementById('q');
+const empty=document.getElementById('empty');
+const chips=[...document.querySelectorAll('.chip')];
+let activeFilter='all';
+
+function applyFilter(){
+  const term=q.value.trim().toLowerCase();
+  let anyVisible=false;
+  document.querySelectorAll('.group').forEach(g=>{
+    const catOk = activeFilter==='all' || g.dataset.cat===activeFilter;
+    let groupHasVisible=false;
+    g.querySelectorAll('.card').forEach(card=>{
+      const textOk = !term || card.dataset.search.includes(term);
+      const show = catOk && textOk;
+      card.classList.toggle('hide',!show);
+      if(show) groupHasVisible=true;
+    });
+    // groups without cards (compare/tools) only respond to filter, not search
+    const hasCards = g.querySelector('.card');
+    let show;
+    if(hasCards){ show = catOk && groupHasVisible; }
+    else { show = catOk && !term; }
+    g.classList.toggle('hide',!show);
+    if(show) anyVisible=true;
+  });
+  empty.classList.toggle('show',!anyVisible);
+}
+q.addEventListener('input',applyFilter);
+chips.forEach(c=>c.addEventListener('click',()=>{
+  chips.forEach(x=>x.dataset.active='false');
+  c.dataset.active='true';
+  activeFilter=c.dataset.filter;
+  applyFilter();
+}));
+
+// keyboard: "/" focuses search, Esc clears
+document.addEventListener('keydown',e=>{
+  if(e.key==='/' && document.activeElement!==q){e.preventDefault();q.focus();}
+  if(e.key==='Escape' && document.activeElement===q){q.value='';applyFilter();q.blur();}
+});
+
+// copy buttons
+const toast=document.getElementById('toast');
+let toastTimer;
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('.copy');
+  if(!btn) return;
+  const val=btn.dataset.copy;
+  navigator.clipboard?.writeText(val).then(()=>{
+    btn.classList.add('done');
+    toast.textContent='Copied  '+val;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>{toast.classList.remove('show');btn.classList.remove('done');},1400);
+  });
+});
+
+// theme toggle (persists for the session via in-memory; GH Pages safe)
+const root=document.documentElement;
+const tbtn=document.getElementById('theme');
+const moon='<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+const sun='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/>';
+function setIcon(){
+  const dark=root.getAttribute('data-theme')==='dark';
+  document.getElementById('ic-moon').innerHTML = dark?moon:sun;
+}
+tbtn.addEventListener('click',()=>{
+  root.setAttribute('data-theme', root.getAttribute('data-theme')==='dark'?'light':'dark');
+  setIcon();
+});
+setIcon();
+</script>
+</body>
+</html>
