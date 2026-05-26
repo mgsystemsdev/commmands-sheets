@@ -255,7 +255,7 @@
     <div class="row">
       <label class="search">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input id="q" type="text" placeholder="Search shortcuts — try “tab”, “select”, “desktop”…" autocomplete="off">
+        <input id="q" type="text" placeholder="Search shortcuts — try “tab”, “terminal”, “select”, “desktop”…" autocomplete="off">
         <kbd>/</kbd>
       </label>
       <button class="iconbtn" id="theme" title="Toggle theme" aria-label="Toggle theme">
@@ -300,11 +300,17 @@ const SECTIONS = [
       {label:'Cycle windows in app', note:'Critical with multiple Chrome windows.', keys:['⌘','`']},
       {label:'Next app', note:'Switch apps — don’t click them.', keys:['⌘','Tab']},
       {label:'Previous app', keys:['⌘','⇧','Tab']},
-      {label:'Move between desktops', note:'Faster than scanning 3 monitors.', keys:['⌃','←','/','→']},
+      {label:'Move between desktops', note:'Faster than scanning 3 monitors. Create Spaces in System Settings → Desktop & Dock.', keys:['⌃','←','/','→']},
+      {label:'Close window', note:'Closes the front window (not always the app).', keys:['⌘','W']},
+      {label:'Minimize window', keys:['⌘','M']},
+      {label:'Full screen', keys:['⌃','⌘','F']},
+      {label:'Hide app', keys:['⌘','H']},
+      {label:'Quit app', keys:['⌘','Q']},
     ]},
   { cat:'macos', title:'Spotlight, Finder & System', meta:'launch by typing',
     cards:[
       {label:'Spotlight', note:'Type “term”, “chrome”, “cursor” — no folder browsing.', keys:['⌘','Space']},
+      {label:'New Finder window', keys:['⌘','N']},
       {label:'Screenshot a region', keys:['⌘','⇧','4']},
       {label:'Screenshot toolbar', note:'Record, full screen, options.', keys:['⌘','⇧','5']},
       {label:'Jump by word', keys:['⌥','←','/','→']},
@@ -313,11 +319,12 @@ const SECTIONS = [
     ]},
   { cat:'chrome', title:'Chrome Navigation', meta:'a lifesaver past 20 tabs',
     cards:[
+      {label:'Focus address bar', note:'Jump to URL bar to type or edit a link.', keys:['⌘','L']},
       {label:'Next / previous tab', keys:['⌘','⌥','→','/','←']},
       {label:'Jump to tab number', note:'⌘ + 9 jumps to the last tab.', keys:['⌘','1','–','9']},
       {label:'Search your tabs', note:'Find any open tab by name.', keys:['⌘','⇧','A']},
       {label:'New tab', keys:['⌘','T']},
-      {label:'Close tab', keys:['⌘','W']},
+      {label:'Close tab', note:'In Chrome this closes the tab; elsewhere ⌘W often closes the window.', keys:['⌘','W']},
       {label:'Reopen closed tab', keys:['⌘','⇧','T']},
     ]},
   { cat:'vscode', title:'VS Code — Open & Search', meta:'stop browsing folders',
@@ -329,6 +336,8 @@ const SECTIONS = [
       {label:'Go to symbol / function', keys:['⌘','⇧','O']},
       {label:'Jump to definition', keys:['F12']},
       {label:'Peek definition', note:'View it inline without leaving.', keys:['⌥','F12']},
+      {label:'Go back', note:'After jumping to definition or search results.', keys:['⌃','-']},
+      {label:'Go forward', keys:['⌃','⇧','-']},
       {label:'Toggle sidebar', keys:['⌘','B']},
       {label:'Toggle terminal', keys:['⌃','`']},
     ]},
@@ -337,10 +346,19 @@ const SECTIONS = [
     cards:[
       {label:'Next tab', keys:['⌃','Tab']},
       {label:'Previous tab', keys:['⌃','⇧','Tab']},
+      {label:'Close tab', keys:['⌘','W']},
       {label:'Reopen closed file', keys:['⌘','⇧','T']},
+      {label:'Add cursor at click', note:'Hold ⌥ and click each spot you want to edit.', keys:['⌥','click']},
       {label:'Select next matching word', note:'Tap repeatedly to edit every match.', keys:['⌘','D']},
       {label:'Select all matching words', keys:['⌘','⇧','L']},
       {label:'Undo last cursor', keys:['⌘','U']},
+    ]},
+  { cat:'vscode', title:'VS Code — Terminal', meta:'focus the panel first',
+    callout:{ic:'⌨️',html:'<b>Click inside the terminal</b> (or press <code style="font-family:JetBrains Mono,monospace">⌃ `</code>) so these shortcuts target the shell, not the editor.'},
+    cards:[
+      {label:'New terminal', keys:['⌃','⇧','`']},
+      {label:'Clear terminal', keys:['⌘','K']},
+      {label:'Search command history', note:'Type to filter past commands, like shell reverse search.', keys:['⌃','R']},
     ]},
   { cat:'text', title:'Selecting & Highlighting', meta:'stop dragging the mouse',
     callout:{ic:'🖱️',html:'<b>Mouse for position, keyboard for selection.</b> Click near the text, hold ⌥ + ⇧, then fly across with the arrows. Beats dragging every time.'},
@@ -356,7 +374,7 @@ const SECTIONS = [
       {label:'Paste', keys:['⌘','V']},
       {label:'Undo', keys:['⌘','Z']},
       {label:'Redo', keys:['⌘','⇧','Z']},
-      {label:'Expand selection smartly', note:'Grows to quotes, brackets, functions.', keys:['⇧','⌥','→','/','←']},
+      {label:'Expand selection smartly', note:'VS Code — grows to quotes, brackets, functions.', keys:['⇧','⌥','→','/','←']},
     ]},
   { cat:'github', title:'While you’re in the repo', meta:'status · sync · PRs',
     callout:{ic:'⌨️',html:'<b>Terminal commands, not shortcuts.</b> Hover a card and copy the line. Requires <a href="https://cli.github.com/" target="_blank" rel="noopener" style="color:inherit">GitHub CLI</a> (<code style="font-family:JetBrains Mono,monospace">gh</code>) for PR commands.'},
@@ -441,8 +459,8 @@ extra.innerHTML=`
   </div>
   <div class="desktops" style="--c:var(--setup)">
     <div class="ds"><div class="num">1</div><div><div class="t1">Coding</div><div class="t2">Heads-down building.</div></div></div>
-    <div class="ds"><div class="num">2</div><div><div class="t1">Browser / Research</div><div class="t2">Chrome, docs, reading.</div></div></div>
-    <div class="ds"><div class="num">3</div><div><div class="t1">Comms / Docs</div><div class="t2">Slack, mail, notes.</div></div></div>
+    <div class="ds"><div class="num">2</div><div><div class="t1">Browser / Research</div><div class="t2">Chrome, docs — or swap for debugging / tests.</div></div></div>
+    <div class="ds"><div class="num">3</div><div><div class="t1">Comms / Meetings</div><div class="t2">Slack, mail, notes, calls.</div></div></div>
   </div>
   <div class="callout"><span class="ic">🧠</span><div><b>The key is fixed spatial memory.</b> When every tool always lives in the same place, your hands go there automatically — no hunting, no alt-tab roulette.</div></div>`;
 main.appendChild(extra);
@@ -466,7 +484,7 @@ scales.innerHTML=`
   <div class="ghead" style="margin-top:34px"><span class="bar"></span><h2>Tools That Change Everything</h2><span class="meta">install in this order</span></div>
   <div class="stack">
     <div class="tool"><span class="tag" style="background:var(--macos)">Start here</span><div><h4>Raycast</h4><p>Replaces Spotlight and becomes your app launcher, clipboard history, window manager, command runner, and AI launcher in one.</p><a href="https://www.raycast.com/" target="_blank" rel="noopener">raycast.com ↗</a></div></div>
-    <div class="tool"><span class="tag" style="background:var(--ink);color:var(--bg)">Next level</span><div><h4>Rectangle · Karabiner-Elements</h4><p>Keyboard-driven window tiling and placement, app hotkeys, and key remapping. Rectangle alone immediately improves a multi-monitor setup.</p><a href="https://rectangleapp.com/" target="_blank" rel="noopener">rectangleapp.com ↗</a> &nbsp; <a href="https://karabiner-elements.pqrs.org/" target="_blank" rel="noopener">karabiner-elements.pqrs.org ↗</a></div></div>
+    <div class="tool"><span class="tag" style="background:var(--ink);color:var(--bg)">Next level</span><div><h4>Rectangle · Raycast Window Management · Karabiner</h4><p>Keyboard-driven window tiling and placement, app hotkeys, and key remapping. Pick shortcuts in each app’s settings and add them to this deck as you go.</p><a href="https://rectangleapp.com/" target="_blank" rel="noopener">rectangleapp.com ↗</a> &nbsp; <a href="https://karabiner-elements.pqrs.org/" target="_blank" rel="noopener">karabiner-elements.pqrs.org ↗</a></div></div>
   </div>`;
 main.appendChild(scales);
 

@@ -4,7 +4,7 @@ An interactive, searchable reference for navigating macOS, VS Code, and Chrome e
 
 ## Features
 - 🔍 **Live search** — type to filter every shortcut (press `/` to focus, `Esc` to clear)
-- 🎛️ **Filter by app** — macOS, Chrome, VS Code, Text, GitHub, Setup
+- 🎛️ **Filter by app** — macOS, Chrome, VS Code (incl. terminal), Text, GitHub, Setup
 - 📋 **Click to copy** — hover any card and copy the shortcut
 - 🌗 **Light / dark theme** toggle
 - 📱 Responsive — works on phone, laptop, and big monitors
